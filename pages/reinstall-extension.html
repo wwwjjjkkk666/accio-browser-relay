@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Upgrade Accio Browser Relay</title>
+    <link rel="stylesheet" href="styles/install-common.css" />
+  </head>
+  <body>
+    <div class="drag-handle"></div>
+    <div class="page">
+
+      <div class="header">
+        <div class="header-icon">
+          <img src="../icons/icon128.png" alt="Accio Browser Relay" />
+        </div>
+        <div>
+          <h1>
+            <span data-i18n="title">Upgrade Accio Browser Relay</span>
+            <span class="title-tag" data-i18n="title_tag">Update Required</span>
+          </h1>
+        </div>
+      </div>
+      <p class="subtitle" data-i18n="subtitle">
+        A new version of the browser extension is available. Please refresh the extension to complete the upgrade.
+      </p>
+
+      <ol class="step-list">
+
+        <li class="step">
+          <div class="step-title" data-i18n="step1_title">Open Extensions Page</div>
+          <div class="step-body">
+            <button class="open-btn" onclick="openChromeUrl('chrome://extensions')">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 8.5V12a1.5 1.5 0 01-1.5 1.5h-7A1.5 1.5 0 012 12V5a1.5 1.5 0 011.5-1.5H7"/>
+                <path d="M10 2h4v4"/>
+                <path d="M7 9L14 2"/>
+              </svg>
+              <span data-i18n="step1_open">Open chrome://extensions</span>
+            </button>
+            <div class="step-extras">
+              <button class="step-extras-toggle" data-target="step1-extras" aria-expanded="false">
+                <svg viewBox="0 0 8 12" fill="currentColor"><path d="M1.5 0L7.5 6L1.5 12L0 10.5L4.5 6L0 1.5Z"/></svg>
+                <span data-i18n="step1_more">Manually copy the URL to open extensions</span>
+              </button>
+              <div class="step-extras-content" id="step1-extras">
+                <span data-i18n="step1_copy_hint">Open a new Chrome tab and paste the address:</span>
+                <div class="url-block" id="copy-url-block">
+                  chrome://extensions
+                  <svg class="copy-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/>
+                    <path d="M3.5 10.5h-1a1 1 0 01-1-1v-7a1 1 0 011-1h7a1 1 0 011 1v1"/>
+                  </svg>
+                  <span class="copy-label" style="font-size:11px;color:var(--muted)" data-i18n="click_to_copy">Click to copy</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li class="step">
+          <div class="step-title" data-i18n="step2_title">Refresh the Extension</div>
+          <div class="step-body">
+            <span data-i18n="step2_body">Find <strong>Accio Browser Relay</strong> on the extensions page, click the <strong>Refresh</strong> button at the bottom-right of the card to complete the upgrade.</span>
+            <div class="screenshot-frame">
+              <img src="https://img.alicdn.com/imgextra/i4/O1CN016QOozs273R4zTpkNo_!!6000000007741-2-tps-830-440.png" alt="Click Refresh on the extension card" />
+            </div>
+          </div>
+        </li>
+
+      </ol>
+
+    </div>
+    <script src="scripts/security.js"></script>
+    <script src="scripts/install-i18n.js"></script>
+    <script src="scripts/install-helpers.js"></script>
+    <script>
+      InstallI18n.register('en', {
+        title: 'Upgrade Accio Browser Relay',
+        title_tag: 'Update Required',
+        subtitle: 'A new version of the browser extension is available. Please refresh the extension to complete the upgrade.',
+        step1_title: 'Open Extensions Page',
+        step1_open: 'Open chrome://extensions',
+        step1_more: 'Manually copy the URL to open extensions',
+        step1_copy_hint: 'Open a new Chrome tab and paste the address:',
+        click_to_copy: 'Click to copy',
+        step2_title: 'Refresh the Extension',
+        step2_body: 'Find <strong>Accio Browser Relay</strong> on the extensions page, click the <strong>Refresh</strong> button at the bottom-right of the card to complete the upgrade.',
+      });
+      InstallI18n.register('zh', {
+        title: '升级 Accio Browser Relay',
+        title_tag: '需要更新',
+        subtitle: '浏览器扩展有新版本可用，请刷新扩展以完成升级。',
+        step1_title: '打开扩展管理页面',
+        step1_open: '打开 chrome://extensions',
+        step1_more: '手动复制地址打开扩展页面',
+        step1_copy_hint: '打开 Chrome 新标签页，粘贴以下地址：',
+        click_to_copy: '点击复制',
+        step2_title: '刷新扩展',
+        step2_body: '在扩展管理页面找到 <strong>Accio Browser Relay</strong>，点击卡片右下角的 <strong>Refresh</strong> 按钮即可完成升级。',
+      });
+
+      InstallI18n.apply();
+      setupAllStepExtras();
+      setupCopyBlock('copy-url-block', 'chrome://extensions');
+    </script>
+  </body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CDP Events Test Page</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a; color: #e2e8f0;
+      min-height: 100vh; padding: 24px;
+    }
+    h1 { color: #38bdf8; margin-bottom: 8px; font-size: 24px; }
+    .subtitle { color: #94a3b8; margin-bottom: 24px; font-size: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+    .card {
+      background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+      padding: 20px; transition: border-color 0.2s;
+    }
+    .card:hover { border-color: #475569; }
+    .card h2 { color: #f8fafc; font-size: 16px; margin-bottom: 4px; }
+    .card .tag {
+      display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px;
+      margin-bottom: 12px; font-weight: 600;
+    }
+    .tag.blocking { background: #ef4444; color: #fff; }
+    .tag.passive { background: #3b82f6; color: #fff; }
+    .tag.lifecycle { background: #a855f7; color: #fff; }
+    .card p { color: #94a3b8; font-size: 13px; margin-bottom: 12px; line-height: 1.5; }
+    button {
+      background: #2563eb; color: #fff; border: none; padding: 8px 16px;
+      border-radius: 6px; cursor: pointer; font-size: 13px; margin: 4px 4px 4px 0;
+      transition: background 0.2s;
+    }
+    button:hover { background: #1d4ed8; }
+    button.danger { background: #dc2626; }
+    button.danger:hover { background: #b91c1c; }
+    button.warn { background: #d97706; }
+    button.warn:hover { background: #b45309; }
+    input, select { background: #0f172a; color: #e2e8f0; border: 1px solid #475569; border-radius: 6px; padding: 6px 10px; font-size: 13px; }
+    input[type="file"] { font-size: 12px; }
+    #log {
+      background: #020617; border: 1px solid #1e293b; border-radius: 8px;
+      padding: 12px; margin-top: 24px; max-height: 200px; overflow-y: auto;
+      font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px;
+      color: #94a3b8; line-height: 1.6;
+    }
+    .log-entry { border-bottom: 1px solid #1e293b; padding: 2px 0; }
+    .log-entry.warn { color: #fbbf24; }
+    .log-entry.error { color: #f87171; }
+    .form-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <h1>CDP Events Test Page</h1>
+  <p class="subtitle">
+    Test all CDP event handlers in accio-browser-relay.
+    Open Extension Service Worker DevTools to see [evt:*] logs.
+  </p>
+
+  <div class="grid">
+    <!-- 1. Dialog: beforeunload -->
+    <div class="card">
+      <h2>1. beforeunload Dialog</h2>
+      <span class="tag blocking">BLOCKING — auto-accept</span>
+      <p>
+        Enables beforeunload handler. After clicking "Enable", closing this tab
+        will trigger "Leave site?" dialog → extension should auto-accept it.
+      </p>
+      <div class="form-row">
+        <input id="form-input" placeholder="Type something to mark form as dirty">
+        <button onclick="enableBeforeUnload()">Enable beforeunload</button>
+      </div>
+    </div>
+
+    <!-- 2. Dialog: alert -->
+    <div class="card">
+      <h2>2. alert() Dialog</h2>
+      <span class="tag blocking">BLOCKING — auto-accept</span>
+      <p>Triggers alert() which blocks until Page.handleJavaScriptDialog is called.</p>
+      <button onclick="testAlert()">Trigger alert()</button>
+    </div>
+
+    <!-- 3. Dialog: confirm -->
+    <div class="card">
+      <h2>3. confirm() Dialog</h2>
+      <span class="tag blocking">BLOCKING — auto-accept</span>
+      <p>Triggers confirm(). Extension auto-accepts (returns true).</p>
+      <button onclick="testConfirm()">Trigger confirm()</button>
+      <span id="confirm-result" style="color: #94a3b8; font-size: 12px;"></span>
+    </div>
+
+    <!-- 4. Dialog: prompt -->
+    <div class="card">
+      <h2>4. prompt() Dialog</h2>
+      <span class="tag blocking">BLOCKING — auto-accept</span>
+      <p>Triggers prompt() with default value. Extension accepts with defaultPrompt.</p>
+      <button onclick="testPrompt()">Trigger prompt()</button>
+      <span id="prompt-result" style="color: #94a3b8; font-size: 12px;"></span>
+    </div>
+
+    <!-- 5. Navigation / SPA -->
+    <div class="card">
+      <h2>5. Navigation Events</h2>
+      <span class="tag lifecycle">Page lifecycle</span>
+      <p>
+        Triggers various Page.frame* events.
+        (frameNavigated, navigatedWithinDocument, loadEventFired, etc.)
+      </p>
+      <button onclick="testHashNav()">Hash Navigation (#test)</button>
+      <button onclick="testHistoryPush()">History.pushState</button>
+      <button onclick="testIframe()">Add iframe</button>
+    </div>
+
+    <!-- 6. window.open -->
+    <div class="card">
+      <h2>6. window.open</h2>
+      <span class="tag lifecycle">Page.windowOpen</span>
+      <p>Opens a new window/popup → triggers Page.windowOpen event.</p>
+      <button onclick="testWindowOpen()">Open Popup</button>
+    </div>
+
+    <!-- 7. Download -->
+    <div class="card">
+      <h2>7. Download</h2>
+      <span class="tag lifecycle">Page.downloadWillBegin</span>
+      <p>Triggers a file download → Page.downloadWillBegin / downloadProgress events.</p>
+      <button onclick="testDownload()">Download Test File</button>
+    </div>
+
+    <!-- 8. File Chooser -->
+    <div class="card">
+      <h2>8. File Chooser</h2>
+      <span class="tag lifecycle">Page.fileChooserOpened</span>
+      <p>Opens file input → Page.fileChooserOpened (if Page.setInterceptFileChooserDialog enabled).</p>
+      <input type="file" id="file-input" accept="image/*">
+    </div>
+
+    <!-- 9. Console / Runtime -->
+    <div class="card">
+      <h2>9. Console & Runtime</h2>
+      <span class="tag passive">Runtime events</span>
+      <p>Triggers console API calls and exceptions (requires Runtime.enable via relay).</p>
+      <button onclick="testConsole()">console.log/warn/error</button>
+      <button class="danger" onclick="testException()">Throw Exception</button>
+    </div>
+
+    <!-- 10. SSL / Interstitial -->
+    <div class="card">
+      <h2>10. Security / SSL</h2>
+      <span class="tag passive">Security events</span>
+      <p>
+        Navigate to a page with bad cert → Security.certificateError.
+        (Requires Security.enable + Security.setOverrideCertificateErrors)
+      </p>
+      <button class="warn" onclick="testBadSSL()">Navigate to expired.badssl.com</button>
+    </div>
+
+    <!-- 11. Debugger.paused -->
+    <div class="card">
+      <h2>11. debugger Statement</h2>
+      <span class="tag blocking">BLOCKING — auto-resume</span>
+      <p>
+        Executes `debugger;` → triggers Debugger.paused event
+        (requires Debugger.enable via relay). Extension auto-resumes.
+      </p>
+      <button class="warn" onclick="testDebugger()">Execute debugger;</button>
+    </div>
+
+    <!-- 12. Multiple Dialogs -->
+    <div class="card">
+      <h2>12. Rapid Dialog Stress Test</h2>
+      <span class="tag blocking">BLOCKING × N</span>
+      <p>Fires multiple dialogs in sequence to test rapid auto-accept handling.</p>
+      <button class="danger" onclick="testRapidDialogs()">Fire 5 alerts</button>
+    </div>
+  </div>
+
+  <div id="log">
+    <div class="log-entry">Ready. Click buttons to trigger CDP events.</div>
+  </div>
+
+  <script>
+    function addLog(msg, level = 'info') {
+      const el = document.getElementById('log');
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${level}`;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      el.prepend(entry);
+    }
+
+    // 1. beforeunload
+    function enableBeforeUnload() {
+      document.getElementById('form-input').value = 'dirty data';
+      window.addEventListener('beforeunload', (e) => {
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes!';
+      });
+      addLog('beforeunload handler enabled. Try closing this tab now.', 'warn');
+    }
+
+    // 2. alert
+    function testAlert() {
+      addLog('Triggering alert()...');
+      alert('This is a test alert. Extension should auto-accept this.');
+      addLog('alert() returned (was auto-accepted by extension).');
+    }
+
+    // 3. confirm
+    function testConfirm() {
+      addLog('Triggering confirm()...');
+      const result = confirm('Test confirm dialog. Extension should accept (true).');
+      document.getElementById('confirm-result').textContent = `Result: ${result}`;
+      addLog(`confirm() returned: ${result}`);
+    }
+
+    // 4. prompt
+    function testPrompt() {
+      addLog('Triggering prompt()...');
+      const result = prompt('Test prompt dialog:', 'default value');
+      document.getElementById('prompt-result').textContent = `Result: "${result}"`;
+      addLog(`prompt() returned: "${result}"`);
+    }
+
+    // 5. Navigation
+    function testHashNav() {
+      addLog('Hash navigation → #test-' + Date.now());
+      location.hash = '#test-' + Date.now();
+    }
+    function testHistoryPush() {
+      const path = '/test-' + Date.now();
+      addLog('History.pushState → ' + path);
+      history.pushState({}, '', path);
+    }
+    function testIframe() {
+      addLog('Adding iframe (triggers frameAttached/frameNavigated)...');
+      const iframe = document.createElement('iframe');
+      iframe.src = 'about:blank';
+      iframe.width = '0'; iframe.height = '0';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+      setTimeout(() => {
+        iframe.remove();
+        addLog('iframe removed (triggers frameDetached).');
+      }, 2000);
+    }
+
+    // 6. window.open
+    function testWindowOpen() {
+      addLog('Opening popup via window.open...');
+      const w = window.open('about:blank', '_blank', 'width=400,height=300');
+      if (w) {
+        w.document.write('<h1>Popup Window</h1><p>Created by CDP test page</p>');
+        addLog('Popup opened successfully.');
+      } else {
+        addLog('Popup blocked by browser.', 'error');
+      }
+    }
+
+    // 7. Download
+    function testDownload() {
+      addLog('Triggering download...');
+      const blob = new Blob(['CDP Events Test - Download file content\n' + new Date().toISOString()], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'cdp-test-download.txt';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      addLog('Download initiated (check Page.downloadWillBegin event).');
+    }
+
+    // 9. Console / Runtime
+    function testConsole() {
+      addLog('Firing console.log/warn/error...');
+      console.log('[CDP Test] console.log message');
+      console.warn('[CDP Test] console.warn message');
+      console.error('[CDP Test] console.error message');
+      addLog('Console messages fired. Check Runtime.consoleAPICalled events.');
+    }
+    function testException() {
+      addLog('Throwing uncaught exception...', 'error');
+      setTimeout(() => {
+        throw new Error('[CDP Test] Uncaught exception for testing Runtime.exceptionThrown');
+      }, 100);
+    }
+
+    // 10. Bad SSL
+    function testBadSSL() {
+      addLog('Navigating to expired.badssl.com (requires Security domain enabled)...', 'warn');
+      window.open('https://expired.badssl.com/', '_blank');
+    }
+
+    // 11. debugger
+    function testDebugger() {
+      addLog('Executing debugger; statement...', 'warn');
+      debugger;
+      addLog('debugger; returned (was auto-resumed by extension).');
+    }
+
+    // 12. Rapid dialogs
+    async function testRapidDialogs() {
+      addLog('Firing 5 rapid alerts...', 'warn');
+      for (let i = 1; i <= 5; i++) {
+        alert(`Rapid alert #${i}/5`);
+        addLog(`Alert #${i} auto-accepted.`);
+      }
+      addLog('All 5 rapid alerts handled.');
+    }
+  </script>
+</body>
+</html>
