@@ -85,7 +85,7 @@ relayToggle.addEventListener('change', async () => {
     await chrome.runtime.sendMessage({ type: 'toggleRelay' })
     await queryBackgroundStatus()
   } catch (err) {
-    console.warn('[accio-options] toggle failed:', err)
+    console.warn('[tydbuddy-options] toggle failed:', err)
   } finally {
     toggleBusy = false
   }
@@ -110,18 +110,18 @@ async function checkPort(controlPort) {
 }
 
 async function loadPort() {
-  const stored = await chrome.storage.local.get(['controlPort', 'relayPort'])
+  const stored = await chrome.storage.local.get(['tydbuddy_controlPort', 'tydbuddy_relayPort'])
   const fromRelay =
-    stored.relayPort != null
-      ? Number.parseInt(String(stored.relayPort), 10) - RELAY_PORT_OFFSET
+    stored.tydbuddy_relayPort != null
+      ? Number.parseInt(String(stored.tydbuddy_relayPort), 10) - RELAY_PORT_OFFSET
       : undefined
-  const port = clampPort(Number.isFinite(fromRelay) ? fromRelay : stored.controlPort)
+  const port = clampPort(Number.isFinite(fromRelay) ? fromRelay : stored.tydbuddy_controlPort)
   portInput.value = String(port)
 }
 
 async function savePort() {
   const port = clampPort(portInput.value)
-  await chrome.storage.local.set({ controlPort: port })
+  await chrome.storage.local.set({ tydbuddy_controlPort: port })
   portInput.value = String(port)
   await checkPort(port)
 }
@@ -240,7 +240,7 @@ logsRefresh.addEventListener('click', () => void refreshLogs())
 // ── Event-driven status updates ──
 
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === 'local' && ('relayEnabled' in changes || 'controlPort' in changes || '_relayState' in changes)) {
+  if (area === 'local' && ('tydbuddy_relayEnabled' in changes || 'tydbuddy_controlPort' in changes || 'tydbuddy_relayState' in changes)) {
     void queryBackgroundStatus()
   }
 })

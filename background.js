@@ -1,5 +1,5 @@
 /**
- * Accio Browser Relay — MV3 Service Worker entry point.
+ * TydBuddy Browser Relay — MV3 Service Worker entry point.
  *
  * Thin orchestration layer: wires up relay, tabs, and CDP modules,
  * then registers Chrome event listeners.
@@ -173,7 +173,7 @@ chrome.runtime.onStartup.addListener(() => {
   void (async () => {
     await initFromStorage()
     if (!(await isRelayEnabled())) return
-    console.info('[accio-relay] browser started with relay enabled, attempting connection')
+    console.info('[tydbuddy-relay] browser started with relay enabled, attempting connection')
     await connectAndAttach()
   })()
 })
@@ -242,26 +242,7 @@ chrome.runtime.onInstalled.addListener((details) => {
       await setRelayEnabled(true)
       void chrome.runtime.openOptionsPage()
     }
-    // 安装/更新时向已打开的 accio 页面补注入新版 content script，
-    // 不刷新页面，用户状态保留；新 CS 会通过 window._accioCSCleanup 清理旧实例的 listener。
-    if (details.reason === 'install' || details.reason === 'update') {
-      const tabs = await chrome.tabs.query({
-        url: ['https://www.accio.com/*', 'https://pre-www.accio.com/*', 'https://local.accio.com/*'],
-      })
-      for (const tab of tabs) {
-        if (!tab.id) continue
-        // 先注入新 CS（清理旧孤儿 listener），再通知 web 侧自动 recheck
-        chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          files: ['content-script.js'],
-        }).then(() => {
-          chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            func: () => window.postMessage({ type: 'accio.extension.updated' }, window.location.origin),
-          }).catch(() => {})
-        }).catch(() => {})
-      }
-    }
+
     ensureKeepAliveAlarm()
     log.info('onInstalled:', details.reason, '— attempting connection')
     await connectAndAttach()

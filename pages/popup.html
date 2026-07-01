@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Accio Browser Relay</title>
+    <title>TydBuddy Browser Relay</title>
     <style>
       :root {
         --bg: #ffffff;
@@ -13,9 +13,9 @@
         --text: #18181b;
         --muted: #71717a;
         --dim: #a1a1aa;
-        --accent: #14b8a6;
-        --accent-soft: rgba(20, 184, 166, 0.08);
-        --accent-glow: rgba(20, 184, 166, 0.2);
+        --accent: #2b9ce7;
+        --accent-soft: rgba(43, 156, 231, 0.08);
+        --accent-glow: rgba(43, 156, 231, 0.2);
         --green: #34d399;
         --green-soft: rgba(52, 211, 153, 0.08);
         --green-glow: rgba(52, 211, 153, 0.35);
@@ -92,12 +92,12 @@
         border-radius: inherit;
       }
       .status-card[data-state="connected"] {
-        border-color: rgba(52, 211, 153, 0.25);
-        box-shadow: 0 2px 16px -4px var(--green-glow);
+        border-color: rgba(43, 156, 231, 0.25);
+        box-shadow: 0 2px 16px -4px var(--accent-glow);
       }
       .status-card[data-state="connected"]::before {
         opacity: 1;
-        background: linear-gradient(135deg, var(--green-soft) 0%, transparent 60%);
+        background: linear-gradient(135deg, var(--accent-soft) 0%, transparent 60%);
       }
       .status-card[data-state="disconnected"] {
         border-color: rgba(245, 158, 11, 0.3);
@@ -131,11 +131,11 @@
         transition: border-color 0.3s;
       }
       .status-card[data-state="connected"] .status-dot {
-        background: var(--green);
-        box-shadow: 0 0 8px var(--green-glow);
+        background: var(--accent);
+        box-shadow: 0 0 8px var(--accent-glow);
       }
       .status-card[data-state="connected"] .status-ring::after {
-        border-color: rgba(52, 211, 153, 0.3);
+        border-color: rgba(43, 156, 231, 0.3);
         animation: ring-expand 2.5s ease-out infinite;
       }
       .status-card[data-state="disconnected"] .status-dot {
@@ -237,29 +237,7 @@
         margin: 10px 0;
       }
 
-      .web-note {
-        display: flex;
-        gap: 8px;
-        padding: 9px 11px;
-        margin: 0 0 10px;
-        border: 1px solid rgba(20, 184, 166, 0.18);
-        border-radius: 10px;
-        background: rgba(20, 184, 166, 0.06);
-        color: var(--muted);
-        font-size: 11px;
-        line-height: 1.4;
-      }
-      .web-note svg {
-        width: 14px;
-        height: 14px;
-        flex-shrink: 0;
-        margin-top: 1px;
-        color: var(--accent);
-      }
-      .web-note strong {
-        color: var(--text);
-        font-weight: 600;
-      }
+
 
       /* ── Tabs section ── */
       .tabs-section {
@@ -340,8 +318,8 @@
         transition: background 0.2s, box-shadow 0.2s;
       }
       .tab-dot[data-state="connected"] {
-        background: var(--green);
-        box-shadow: 0 0 6px var(--green-glow);
+        background: var(--accent);
+        box-shadow: 0 0 6px var(--accent-glow);
       }
       .tab-dot[data-state="attaching"] {
         background: var(--yellow);
@@ -405,7 +383,7 @@
       .settings-link:hover {
         color: var(--accent);
         background: var(--accent-soft);
-        border-color: rgba(20, 184, 166, 0.2);
+        border-color: rgba(43, 156, 231, 0.2);
       }
       .settings-link svg {
         width: 14px; height: 14px;
@@ -452,7 +430,7 @@
     <div class="popup">
       <div class="header anim">
         <img src="../icons/icon128.png" alt="" />
-        <span class="header-text">Accio Browser Relay<span class="version-badge" id="version-badge"></span></span>
+        <span class="header-text">TydBuddy Browser Relay<span class="version-badge" id="version-badge"></span></span>
       </div>
 
       <div class="status-card anim anim-d1" id="status-card" data-state="disabled">
@@ -473,14 +451,7 @@
 
       <div class="meta anim anim-d2" id="meta"></div>
 
-      <div class="web-note anim anim-d2">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="8" cy="8" r="6"/>
-          <path d="M8 5.2v3.2"/>
-          <path d="M8 11h.01"/>
-        </svg>
-        <span><strong>Using Accio on the web?</strong> You do not need Connect here. Connect is only for the desktop app.</span>
-      </div>
+
 
       <div class="tabs-section anim anim-d2" id="tabs-section" data-empty="true" data-open="false">
         <div class="tabs-header" id="tabs-header">

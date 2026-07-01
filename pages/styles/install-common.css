@@ -1,6 +1,6 @@
 :root {
   color-scheme: light dark;
-  --accent: #14b8a6;
+  --accent: #2b9ce7;
   --accent-soft: color-mix(in oklab, var(--accent) 10%, transparent);
   --accent-border: color-mix(in oklab, var(--accent) 25%, transparent);
   --green: #22C55E;

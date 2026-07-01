@@ -1,8 +1,8 @@
 // 重新注入时（插件安装/更新后对已打开 tab 的补注入），先清理旧实例的 listener，
 // 避免同一 isolated world 内出现重复监听。
-if (window._accioCSCleanup) {
+if (window._tydbuddyCSCleanup) {
   try {
-    window._accioCSCleanup()
+    window._tydbuddyCSCleanup()
   } catch {
     // old instance cleanup may throw if its context was already invalidated
   }
@@ -21,7 +21,7 @@ function postReady() {
   try {
     window.postMessage(
       {
-        type: 'accio.extension.ready',
+        type: 'tydbuddy.extension.ready',
         extensionId: chrome.runtime.id,
         extensionVersion: chrome.runtime.getManifest().version,
       },
@@ -37,18 +37,18 @@ const _onMessage = (event) => {
   const data = event.data
   if (!data) return
   if (!isContextValid()) return
-  if (data.type === 'accio.extension.request') {
+  if (data.type === 'tydbuddy.extension.request') {
     postReady()
     return
   }
-  if (data.type === 'accio.extension.status.request') {
+  if (data.type === 'tydbuddy.extension.status.request') {
     try {
       chrome.runtime.sendMessage({ type: 'getRelayStatus' }, (status) => {
         try {
           if (chrome.runtime.lastError) return
           window.postMessage(
             {
-              type: 'accio.extension.status',
+              type: 'tydbuddy.extension.status',
               status,
             },
             window.location.origin,
@@ -62,7 +62,7 @@ const _onMessage = (event) => {
     }
     return
   }
-  if (data.type === 'accio.extension.openInstallGuide') {
+  if (data.type === 'tydbuddy.extension.openInstallGuide') {
     try {
       chrome.runtime.sendMessage({
         type: 'openInstallGuide',
@@ -75,6 +75,6 @@ const _onMessage = (event) => {
 }
 
 window.addEventListener('message', _onMessage)
-window._accioCSCleanup = () => window.removeEventListener('message', _onMessage)
+window._tydbuddyCSCleanup = () => window.removeEventListener('message', _onMessage)
 
 postReady()

@@ -30,7 +30,7 @@ const ARROW_SVG =
   '<svg class="tab-go" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4.5 2.5l4 3.5-4 3.5"/></svg>'
 
 function escapeHtml(str) {
-  return window.AccioSecurity.escapeHtml(str)
+  return window.TydBuddySecurity.escapeHtml(str)
 }
 
 function render(status) {
@@ -125,11 +125,11 @@ async function refresh() {
     const [status, tabResp, stored] = await Promise.all([
       chrome.runtime.sendMessage({ type: 'getRelayStatus' }),
       chrome.runtime.sendMessage({ type: 'getTabList' }),
-      chrome.storage.local.get(['_relayError']),
+      chrome.storage.local.get(['_tydbuddy_relayError']),
     ])
     render(status)
     renderTabs(tabResp?.tabs)
-    renderError(stored._relayError)
+    renderError(stored._tydbuddy_relayError)
   } catch {
     render(null)
     renderTabs([])
@@ -157,7 +157,7 @@ document.getElementById('open-settings').addEventListener('click', () => {
 chrome.storage.onChanged.addListener((changes, area) => {
   if (
     area === 'local' &&
-    ('relayEnabled' in changes || '_relayState' in changes || '_relayError' in changes)
+    ('tydbuddy_relayEnabled' in changes || 'tydbuddy_relayState' in changes || '_tydbuddy_relayError' in changes)
   ) {
     void refresh()
   }

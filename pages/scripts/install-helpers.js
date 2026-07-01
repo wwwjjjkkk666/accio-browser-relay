@@ -77,7 +77,7 @@ function setupCopyBlock(blockId, textToCopy) {
 }
 
 function escapeHtml(value) {
-  return window.AccioSecurity.escapeHtml(value);
+  return window.TydBuddySecurity.escapeHtml(value);
 }
 
 function setupExtensionPath() {

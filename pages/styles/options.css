@@ -6,10 +6,10 @@
   --text: #18181b;
   --muted: #71717a;
   --dim: #a1a1aa;
-  --accent: #14b8a6;
-  --accent-soft: rgba(20, 184, 166, 0.08);
-  --accent-border: rgba(20, 184, 166, 0.2);
-  --accent-glow: rgba(20, 184, 166, 0.15);
+  --accent: #2b9ce7;
+  --accent-soft: rgba(43, 156, 231, 0.08);
+  --accent-border: rgba(43, 156, 231, 0.2);
+  --accent-glow: rgba(43, 156, 231, 0.15);
   --green: #34d399;
   --green-soft: rgba(52, 211, 153, 0.08);
   --green-glow: rgba(52, 211, 153, 0.35);
@@ -117,8 +117,8 @@ body {
 }
 
 .status-card[data-state="connected"] {
-  border-color: rgba(52, 211, 153, 0.25);
-  box-shadow: 0 2px 16px -4px var(--green-glow);
+  border-color: rgba(43, 156, 231, 0.25);
+  box-shadow: 0 2px 16px -4px var(--accent-glow);
 }
 
 .status-card[data-state="disconnected"] {
@@ -140,7 +140,7 @@ body {
 
 .status-card[data-state="connected"] .status-glow {
   opacity: 1;
-  background: linear-gradient(135deg, var(--green-soft), transparent 60%);
+  background: linear-gradient(135deg, var(--accent-soft), transparent 60%);
 }
 
 .status-card[data-state="disconnected"] .status-glow {
@@ -166,8 +166,8 @@ body {
 }
 
 .status-card[data-state="connected"] .status-indicator {
-  background: var(--green);
-  box-shadow: 0 0 10px var(--green-glow);
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent-glow);
 }
 
 .status-card[data-state="connected"] .status-indicator::after {
@@ -175,7 +175,7 @@ body {
   position: absolute;
   inset: -4px;
   border-radius: 50%;
-  border: 1.5px solid rgba(52, 211, 153, 0.3);
+  border: 1.5px solid rgba(43, 156, 231, 0.3);
   animation: indicator-ring 2.5s ease-out infinite;
 }
 
@@ -501,9 +501,9 @@ body {
   transition: box-shadow 0.3s;
 }
 
-.indicator-dot--green {
-  background: var(--green);
-  box-shadow: 0 0 8px var(--green-glow);
+.indicator-dot--blue {
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
 }
 
 .indicator-dot--yellow {
@@ -588,7 +588,7 @@ code {
   transition: color 0.2s;
 }
 
-.port-status[data-kind="ok"] { color: var(--green); }
+.port-status[data-kind="ok"] { color: var(--accent); }
 .port-status[data-kind="error"] { color: var(--red); }
 
 /* ── Tab list ── */
@@ -635,8 +635,8 @@ code {
 }
 
 .tab-entry-state[data-state="connected"] {
-  background: var(--green);
-  box-shadow: 0 0 6px var(--green-glow);
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent-glow);
 }
 .tab-entry-state[data-state="virtual"] { background: var(--dim); }
 .tab-entry-state[data-state="attaching"] {
@@ -711,7 +711,7 @@ code {
 
 .log-time { color: var(--dim); flex-shrink: 0; }
 .log-dir { flex-shrink: 0; width: 16px; text-align: center; }
-.log-dir[data-dir="↓"] { color: var(--green); }
+.log-dir[data-dir="↓"] { color: var(--accent); }
 .log-dir[data-dir="↑"] { color: var(--accent); }
 .log-method { color: var(--text); font-weight: 500; }
 .log-detail { color: var(--muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -772,11 +772,11 @@ code {
 }
 
 .mini-toggle input:checked + .mini-toggle-track {
-  background: var(--green);
-  box-shadow: 0 0 8px var(--green-glow);
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
 }
 
 .mini-toggle input:checked + .mini-toggle-track::after {
   transform: translateX(14px);
-  box-shadow: 0 0 4px var(--green-glow);
+  box-shadow: 0 0 4px var(--accent-glow);
 }

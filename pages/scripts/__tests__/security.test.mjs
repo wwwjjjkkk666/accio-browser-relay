@@ -9,10 +9,10 @@ function loadSecurity() {
   const sandbox = { window: {} }
   sandbox.globalThis = sandbox
   vm.runInNewContext(source, sandbox, { filename: scriptPath })
-  return sandbox.window.AccioSecurity
+  return sandbox.window.TydBuddySecurity
 }
 
-describe('AccioSecurity.escapeHtml', () => {
+describe('TydBuddySecurity.escapeHtml', () => {
   test('escapes HTML metacharacters for HTML sinks', () => {
     const security = loadSecurity()
 

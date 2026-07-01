@@ -8,7 +8,7 @@ function loadContentScript({ lastError } = {}) {
   let lastErrorReadCount = 0
 
   const windowRef = {
-    location: { origin: 'https://www.accio.com' },
+    location: { origin: 'https://www.tydbuddy.com' },
     postMessage(payload, origin) {
       posts.push({ payload, origin })
     },
@@ -54,7 +54,7 @@ function loadContentScript({ lastError } = {}) {
   }
 }
 
-describe('accio browser relay content script', () => {
+describe('tydbuddy browser relay content script', () => {
   test('consumes runtime.lastError and skips stale status response when message channel closes', () => {
     const runtimeError = {
       message:
@@ -62,9 +62,9 @@ describe('accio browser relay content script', () => {
     }
     const harness = loadContentScript({ lastError: runtimeError })
 
-    harness.dispatchMessage({ type: 'accio.extension.status.request' })
+    harness.dispatchMessage({ type: 'tydbuddy.extension.status.request' })
 
     expect(harness.getLastErrorReadCount()).toBeGreaterThan(0)
-    expect(harness.posts.map((entry) => entry.payload.type)).not.toContain('accio.extension.status')
+    expect(harness.posts.map((entry) => entry.payload.type)).not.toContain('tydbuddy.extension.status')
   })
 })

@@ -11,7 +11,7 @@
       .replace(/'/g, '&#39;');
   }
 
-  window.AccioSecurity = {
+  window.TydBuddySecurity = {
     escapeHtml: escapeHtml,
   };
 })();
