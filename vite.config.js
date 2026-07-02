@@ -58,7 +58,7 @@ function copyFolderRecursive(src, dest) {
 
 export default defineConfig({
   build: {
-    outDir: 'dist',
+    outDir: 'tydbuddy-browser-relay',
     emptyOutDir: true,
     minify: false,
     cssCodeSplit: false,
@@ -81,7 +81,7 @@ export default defineConfig({
     {
       name: 'copy-extension-assets',
       closeBundle() {
-        const outDir = 'dist'
+        const outDir = 'tydbuddy-browser-relay'
         try {
           // 1. Copy manifest.json
           if (fs.existsSync('manifest.json')) {
