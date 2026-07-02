@@ -4,9 +4,10 @@
   "version": "0.1.0",
   "description": "Build tooling for the TydBuddy Browser Relay Chrome extension",
   "scripts": {
-    "build": "node scripts/build.js"
+    "build": "vite build"
   },
   "devDependencies": {
-    "javascript-obfuscator": "^4.1.1"
+    "javascript-obfuscator": "^4.1.1",
+    "vite": "^8.1.3"
   }
 }
