@@ -1,0 +1,12 @@
+{
+  "name": "tydbuddy-browser-relay",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Build tooling for the TydBuddy Browser Relay Chrome extension",
+  "scripts": {
+    "build": "node scripts/build.js"
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "^4.1.1"
+  }
+}
